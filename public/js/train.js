@@ -6,6 +6,7 @@ var falsebutton;
 var start = false;
 var interval, time = 0, mistake = 0;
 var left = 0, size, prevActiveKey, keyLayout = "";
+var user = false;
 
 jq(document).ready(() => {
     for(var i = 0; i < text.length; i++){
@@ -16,6 +17,9 @@ jq(document).ready(() => {
     }
     jq("#textbox").attr("spellcheck", "false").focus();
     jq("#again").click(() => againClick());
+    jq(".user").click(() => userClick());
+    jq(".exit").click(() => jq(".register-bigBlock").css("display", "none"));
+    jq(".regLine").click(() => jq(".register-bigBlock").css("display", "block"))
     jq(".letter").css("transition", "0.2s");
     jq(document).on("input", "#textbox", () => test());
     jq(document).keyup(function(e) { if (e.key === "Escape" && start) againClick()});
@@ -23,6 +27,17 @@ jq(document).ready(() => {
     jq("#again").css("display", "none");
     seeKey()
 });
+
+function userClick(){
+    if(!user){
+        jq(".user-block").css("display", "block");
+        user = true;
+    }
+    else{
+        jq(".user-block").css("display", "none");
+        user = false;
+    }
+}
 
 function test(){
     var textInArea = jq("#textbox").val();

@@ -266,4 +266,107 @@ body{
     right: 1%;
     color: #0288d1;
     font-size: 2em;
+    transition: 0.2s;
+}
+
+.user:hover{
+    transform: scale(1.2) translateY(-37.5%);
+    cursor: pointer;
+}
+
+.user-block{
+    position: absolute;
+    top: 6vh;
+    right: 0;
+    z-index: 2;
+    background: #ffffff;
+    box-shadow: 0px 0px 0.5px 0.3px rgba(0,0,0,0.75);
+    display: none;
+}
+
+.user-block-line{
+    font-size: 150%;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+.user-block-line:not(:last-child){
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    border-color: #f0f0f0;
+}
+
+.user-block-line:hover{
+    cursor: pointer;
+    background: #f0f0f0;
+}
+
+.register-bigBlock{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(155, 155, 155, 0.5);
+    z-index: 4;
+    display: none;
+}
+
+.register{
+    width: 50%;
+    height: 50vh;
+    background: #f5f5f5;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lab{
+    display: block;
+    margin: 5px auto auto auto;
+    text-align: center;
+}
+
+.labText{
+    font-size: 2em;
+}
+
+.labEnter{
+    width: 25%;
+    font-size: 1.5em;
+    border-style: none;
+    box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
+}
+
+.regButton{
+    font-size: 2em;
+    height: 75px;
+    margin: 15px auto auto auto;
+    display: block;
+    border-style: none;
+    background: #0288d1;
+    color: #ffffff;
+    box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
+}
+
+.regButton:hover{
+    cursor: pointer;
+}
+
+.text-center{
+    text-align: center;
+    font-size: 3em;
+}
+
+.exit{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2em;
+    color: #0288d1;
+}
+
+.exit:hover{
+    cursor: pointer;
 }
