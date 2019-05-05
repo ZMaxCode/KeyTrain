@@ -47,7 +47,7 @@ body{
     overflow: hidden;
 }
 
-#textbox{
+.textbox{
     background: #ffffff;
     display: block;
     margin: 2px auto auto auto;
@@ -138,7 +138,7 @@ body{
     left: 1%;
     top: 50%;
     transform: translateY(-50%);
-    color: #0288d1;
+    color: #0289d1;
 }
 
 .help{
@@ -244,6 +244,7 @@ body{
     border-style: solid;
     border-width: 2px;
     border-color: #e3e3e3;
+    transition: 0.2s;
 }
 
 .other-text-button:last-child{
@@ -301,7 +302,7 @@ body{
     background: #f0f0f0;
 }
 
-.register-bigBlock{
+.bigBlock{
     width: 100vw;
     height: 100vh;
     position: absolute;
@@ -309,17 +310,18 @@ body{
     left: 0;
     background: rgba(155, 155, 155, 0.5);
     z-index: 4;
-    display: none;
 }
 
-.register{
+#reg, #logIn, #addText, #leaderboard{display: none}
+
+.otherForm{
     width: 50%;
-    height: 50vh;
     background: #f5f5f5;
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding-bottom: 32px;
 }
 
 .lab{
@@ -339,7 +341,7 @@ body{
     box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
 }
 
-.regButton{
+.formButton{
     font-size: 2em;
     height: 75px;
     margin: 15px auto auto auto;
@@ -348,9 +350,10 @@ body{
     background: #0288d1;
     color: #ffffff;
     box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
+    min-width: 200px;
 }
 
-.regButton:hover{
+.formButton:hover{
     cursor: pointer;
 }
 
@@ -368,5 +371,73 @@ body{
 }
 
 .exit:hover{
+    cursor: pointer;
+}
+
+.other-text-button:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.leaderBlock{
+    width: 90%;
+    height: 60vh;
+    margin: auto;
+    background: #ffffff;
+    box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
+}
+
+.whereAmI{
+    width: 90%;
+    margin: 20px auto;
+    background: #ffffff;
+    box-shadow: 0px 0px 0.5px 0.1px rgba(0,0,0,0.75);
+}
+
+.leaderInfoFlex{
+    display: flex;
+    justify-content: space-around;
+}
+
+.leaderInfo{
+    font-size: 2em;
+    width: 100%;
+    text-align: center;
+    border-style: solid;
+    border-color: #e3e3e3;
+    border-width: 0 2px 2px 0;
+}
+
+.leaderInfo:last-child{
+    border-width: 0 0 2px 0;
+}
+
+.leader-users{font-size: 0.8em;}
+.leaderMe{font-size: 1.2em;}
+
+.leaderMe > div:not(:last-child){border-width: 0px 2px 0px 0px}
+.leaderMe > div:last-child{border-width: 0;}
+
+.list-text-block{
+    width: 100%;
+    max-height: 92vh;
+}
+
+.list-text{
+    width: 100%;
+    padding: 20px 5px 20px 5px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #e3e3e3;
+    border-width: 0 0 2px 0;
+    font-size: 1.5em;
+    transition: 0.2s;
+}
+
+.list-text:last-child{
+    border-style: none;
+}
+
+.list-text:hover{
     cursor: pointer;
 }

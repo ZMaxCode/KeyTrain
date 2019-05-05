@@ -1,6 +1,7 @@
 var jq = jQuery.noConflict();
-var text = "Давай проверим твою скорость печати";
+let text = ["Я сасал меня ебали", "Кек лол арбидол", "Тони Старк умрет в конце", "Проверка связи", "Саня хуй саси"];
 var activebutton = 0;
+var activeTextNumber = 0, activeText = text[0];
 var truebutton = true;
 var falsebutton;
 var start = false;
@@ -9,24 +10,76 @@ var left = 0, size, prevActiveKey, keyLayout = "";
 var user = false;
 
 jq(document).ready(() => {
-    for(var i = 0; i < text.length; i++){
-        var letter = jq("<span/>");
-        letter.text(text[i]);
-        letter.attr("class", "letter");
-        jq(".text").append(letter);
+    createText();
+    for(let i = 0; i < text.length; i++){
+        let block = jq("<div/>");
+        block.text(text[i]);
+        block.attr("class", "list-text");
+        jq(".list-text-block").append(block);
+        block.click(() => changeText(block, i));
     }
-    jq("#textbox").attr("spellcheck", "false").focus();
+    jq(".list-text").eq(0).css("background", "#0289d16e");
+    jq("#enterTextBox").attr("spellcheck", "false").focus();
     jq("#again").click(() => againClick());
     jq(".user").click(() => userClick());
-    jq(".exit").click(() => jq(".register-bigBlock").css("display", "none"));
-    jq(".regLine").click(() => jq(".register-bigBlock").css("display", "block"))
+    jq(".exit").click(() => jq(".bigBlock").css("display", "none"));
+    jq(".regLine").click(() => lineClick("#reg"))
+    jq(".logInLine").click(() => lineClick("#logIn"))
+    jq("#addTextButton").click(() => jq("#addText").css("display", "block"))
+    jq("#leaderButton").click(() => jq("#leaderboard").css("display", "block"))
+    jq("#rendom-text").click(() => randomText())
+    jq("#addAndUpdateText").click(() => addText());
     jq(".letter").css("transition", "0.2s");
-    jq(document).on("input", "#textbox", () => test());
+    jq(document).on("input", "#enterTextBox", () => test());
     jq(document).keyup(function(e) { if (e.key === "Escape" && start) againClick()});
     jq(".progress-line").css("display", "none");
     jq("#again").css("display", "none");
     seeKey()
 });
+
+function addText(){
+    if(jq("#addTextBox").val() != ""){
+        text.push(jq("#addTextBox").val());
+        let block = jq("<div/>");
+        block.text(jq("#addTextBox").val());
+        block.attr("class", "list-text");
+        jq(".list-text-block").append(block);
+        let i = text.length - 1;
+        block.click(() => changeText(block, i));
+        jq("#addTextBox").val("");
+        jq("#addText").css("display", "none");
+    }
+}
+
+function randomText(){
+    var rand = Math.floor(Math.random() * (text.length  - 0) + 0);
+    while(rand == activeTextNumber) rand = Math.floor(Math.random() * (text.length  - 0) + 0);
+    changeText(jq(".list-text").eq(rand), rand);
+}
+
+function createText(){
+    for(var i = 0; i < activeText.length; i++){
+        var letter = jq("<span/>");
+        letter.text(activeText[i]);
+        letter.attr("class", "letter");
+        jq(".text").append(letter);
+    }
+}
+
+function changeText(block, i){
+    jq(".list-text").eq(activeTextNumber).css("background", "transparent");
+    block.css("background", "#0289d16e");
+    activeTextNumber = i;
+    activeText = block.text();
+    jq(".text").empty();
+    createText();
+    againClick();
+}
+
+function lineClick(id){
+    jq(id).css("display", "block");
+    userClick();
+}
 
 function userClick(){
     if(!user){
@@ -40,7 +93,7 @@ function userClick(){
 }
 
 function test(){
-    var textInArea = jq("#textbox").val();
+    var textInArea = jq("#enterTextBox").val();
     if(!start){
         interval = setInterval(() => time += 0.1, 100);
         start = true;
@@ -48,12 +101,12 @@ function test(){
         jq(".help").css("opacity", "0");
     }
     if(textInArea.length > activebutton){
-        if(activebutton >= 15 && activebutton <= text.length - 15){
-            left-= jq(".helptext").text(text).width() / text.length;
+        if(activebutton >= 15 && activebutton <= activeText.length - 15){
+            left-= jq(".helptext").text(activeText).width() / activeText.length;
             jq(".text").css("transform", "translateX(" + left + "px)")
         }
         if(truebutton){
-            if(textInArea[activebutton] == text[activebutton]){
+            if(textInArea[activebutton] == activeText[activebutton]){
                 jq(".letter").eq(activebutton).css("color", "#4caf50");
                 activebutton++;
             } 
@@ -64,7 +117,7 @@ function test(){
                 mistake++;
                 activebutton++;
             }
-            if(activebutton < text.length) seeKey();
+            if(activebutton < activeText.length) seeKey();
         }
         else{
             jq(".letter").eq(activebutton).css("color", "#f44336");
@@ -73,21 +126,21 @@ function test(){
     }
     else{
         activebutton--
-        if(activebutton >= 15 && activebutton <= text.length - 15){
-            left+= jq(".helptext").text(text).width() / text.length;
+        if(activebutton >= 15 && activebutton <= activeText.length - 15){
+            left+= jq(".helptext").text(text).width() / activeText.length;
             jq(".text").css("transform", "translateX(" + left + "px)")
         }
         jq(".letter").eq(activebutton).css("color", "black");
         if(activebutton == falsebutton) truebutton = true;
         seeKey();
     }
-    if(textInArea.length == text.length && truebutton){
+    if(textInArea.length == activeText.length && truebutton){
         clearInterval(interval);
         jq(".key").eq(prevActiveKey).removeClass("activeKey");
         removeShift()
         prevActiveKey = NaN;
-        keyNumber = parseInt(text.length / time * 60)
-        jq('#textbox').attr('disabled','disabled');
+        keyNumber = parseInt(activeText.length / time * 60)
+        jq('#enterTextBox').attr('disabled','disabled');
         jq('.total').html("Скорость печати: " + keyNumber + " символов в минуту<br>Количество ошибок: " + mistake);
         jq(".progress-line-process").css("left", keyNumber >= 400 ? 100 + "%" : 100 / 400 * keyNumber + "%");
         jq(".progress-line").css("display", "block");        
@@ -97,7 +150,7 @@ function test(){
 function againClick(){
     clearInterval(interval);
     var key = jq(".key");
-    jq("#textbox").val("").attr("disabled", false).focus();
+    jq("#enterTextBox").val("").attr("disabled", false).focus();
     jq(".total").html("Ожидание завершения написания текста");
     jq(".letter").css("color", "black");
     start = false;
@@ -118,14 +171,14 @@ function againClick(){
 
 function seeKey(){
     var key = jq(".key");
-    var textUpper = text.toUpperCase();
+    var textUpper = activeText.toUpperCase();
     var letterCode = ["A".charCodeAt(0), "Z".charCodeAt(0), "А".charCodeAt(0), "Я".charCodeAt(0)]
     if(findLetter() && activebutton != 0){
-        if(text.toUpperCase().charCodeAt(activebutton) >= letterCode[0] && text.toUpperCase().charCodeAt(activebutton) <= letterCode[1]) keyLayout = "eng";
+        if(activeText.toUpperCase().charCodeAt(activebutton) >= letterCode[0] && activeText.toUpperCase().charCodeAt(activebutton) <= letterCode[1]) keyLayout = "eng";
         else keyLayout = "rus";
     }
     else if(activebutton == 0){
-        for(var i = 0; i < text.length; i++){
+        for(var i = 0; i < activeText.length; i++){
             if(findLetter()){
                 if(textUpper.toUpperCase().charCodeAt(i) >= letterCode[0] && textUpper.toUpperCase().charCodeAt(i) <= letterCode[1]) keyLayout = "eng";
                 else keyLayout = "rus";
@@ -137,11 +190,11 @@ function seeKey(){
     if(!isNaN(prevActiveKey)) key.eq(prevActiveKey).removeClass("activeKey");
     if(truebutton){
         if(findLetter()){
-            if(text[activebutton] === text[activebutton].toUpperCase()){
+            if(activeText[activebutton] === activeText[activebutton].toUpperCase()){
                 for(var i = 0; i < key.length; i++){
                     var s = false;
                     for(var j = 0; j < key.eq(i).text().length; j++){
-                        if(key.eq(i).text()[j].toUpperCase() == text[activebutton].toUpperCase()){
+                        if(key.eq(i).text()[j].toUpperCase() == activeText[activebutton].toUpperCase()){
                             changeShift(i);
                             s = true;
                             break;
@@ -152,7 +205,7 @@ function seeKey(){
             } 
             else removeShift();
         }
-        switch(text[activebutton]){
+        switch(activeText[activebutton]){
         case "\"" : checkKey(39, key, true, 2, true); break;
         case ";" : checkKey(38, key, false, 4, true); break;
         case ":" : checkKey(38, key, true, 6, true); break;
@@ -165,12 +218,12 @@ function seeKey(){
             for(var i = 0; i < key.length; i++){
                 var exit = false;
                 for(var j = 0; j < key.eq(i).text().length; j++){
-                    if(key.eq(i).text()[j].toUpperCase() == text[activebutton].toUpperCase()){
+                    if(key.eq(i).text()[j].toUpperCase() == activeText[activebutton].toUpperCase()){
                         key.eq(i).addClass("activeKey");
                         if(!findLetter()){
                             var simbol1 = "-=\\'", simbol2 = "!@#№$%^&*()_+|<>", exit = false;;
                             for(var k = 0; k < simbol1.length; k++){
-                                if(text[activebutton] == simbol1[k]){
+                                if(activeText[activebutton] == simbol1[k]){
                                     removeShift()
                                     exit = true;
                                     break;
@@ -178,7 +231,7 @@ function seeKey(){
                             }
                             if(!exit){
                                 for(var k = 0; k < simbol2.length; k++){
-                                    if(text[activebutton] == simbol2[k]){
+                                    if(activeText[activebutton] == simbol2[k]){
                                         changeShift(i)
                                         break;
                                     }
@@ -195,7 +248,7 @@ function seeKey(){
             }
         break;
         }
-        if(text[activebutton] == " "){
+        if(activeText[activebutton] == " "){
         key.eq(prevActiveKey).removeClass("activeKey");
         removeShift();
         key.eq(53).addClass("activeKey");
@@ -224,7 +277,7 @@ function checkKey(a, b, c, d, e){
 }
 
 function findLetter(){
-    var textUpper = text.toUpperCase();
+    var textUpper = activeText.toUpperCase();
     var letterCode = ["A".charCodeAt(0), "Z".charCodeAt(0), "А".charCodeAt(0), "Я".charCodeAt(0)]
     return ((textUpper.toUpperCase().charCodeAt(activebutton) >= letterCode[0] && textUpper.charCodeAt(activebutton) <= letterCode[1]) || 
     (textUpper.toUpperCase().charCodeAt(activebutton) >= letterCode[2] && textUpper.toUpperCase().charCodeAt(activebutton) <= letterCode[3]));

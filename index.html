@@ -11,17 +11,21 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 		<title>Traning</title>
 	</head>
-	
     <body>
+
 		<div class = "head">
 			<div class = "name">KeyTrain</div>
 			<div class = "user"><i class="fas fa-user"></i></div>
 		</div>
+
 		<div class = "flex-block">
 			<div class = "left-block">
 				<div class = "block-header">Другие тексты</div>
-				<div class = "other-text-button"><div class = "help-center"><i class="fas fa-random other-text"></i></div></div>
-				<div class = "other-text-button"><div class = "help-center"><i class="fas fa-plus other-text"></i></div></div>
+				<div class = "list-text-block">
+
+				</div>
+				<div class = "other-text-button" id = "rendom-text"><div class = "help-center"><i class="fas fa-random other-text"></i></div></div>
+				<div class = "other-text-button" id = "addTextButton"><div class = "help-center"><i class="fas fa-plus other-text"></i></div></div>
 			</div>
 			<div class = "center-block">
 				<div class = "text-block">
@@ -29,7 +33,7 @@
 				</div>
 				<span class = "helptext"></span>
 				<div class = "help">Вводите данный выше текст в поле ниже. Начало начнется после первого введенного символа</div>
-				<textarea id = "textbox"></textarea>
+				<textarea id = "enterTextBox" class = "textbox"></textarea>
 				<div class = "keyboard-block">
 					<div class = flex-key>
 						<span class = "key mini onefinger"><span class = "upperkeytext">~</span><span class = "centerkeytext">`</span><span class = "bottomkeytext">ё</span></span>
@@ -108,15 +112,19 @@
 				</div>
 				<div class = "total">Ожидание завершения написания текста</div>
 				<button id = "again">Начать заново</button>
-				<div class = "other-text-button"><div class = "help-center"><i class="fas fa-trophy other-text"></i></div></div>
+				<div class = "other-text-button" id = "leaderButton"><div class = "help-center"><i class="fas fa-trophy other-text"></i></div></div>
 			</div>
 		</div>
+
 		<div class = "user-block">
 			<div class = "user-block-line regLine">Регистрация</div>
-			<div class = "user-block-line">Вход</div>
+			<div class = "user-block-line logInLine">Вход</div>
 		</div>
-		<div class = "register-bigBlock">
-			<div class = "register">
+
+		<!--Register form-->
+
+		<div class = "bigBlock" id = "reg">
+			<div class = "otherForm">
 				<i class="fas fa-times exit"></i>
 				<h1 class = "text-center">Регистрация</h1>
 				<form method = "post">
@@ -132,9 +140,76 @@
 						<label for="password" class = "labText">Повторите пароль</label><br>
 						<input type="password" name="password" class = "labEnter" required>
 					</div>
-					<button type="submit" class = "regButton">Зарегистрироваться</button> 
+					<button type="submit" class = "formButton" name = "register">Зарегистрироваться</button> 
 				</form>
 			</div>
 		</div>
+
+		<!--End register form-->
+		<!--Login form-->
+
+		<div class = "bigBlock" id = "logIn">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Вход</h1>
+				<form method = "post">
+					<div class = "lab">
+						<label for="login" class = "labText">Логин</label><br>
+						<input type="text" name="login" class = "labEnter" required>
+					</div>
+					<div class = "lab">
+						<label for="password" class = "labText">Пароль</label><br>
+						<input type="password" name="password" class = "labEnter" required>
+					</div>
+					<button type="submit" class = "formButton" name = "logIn">Войти</button> 
+				</form>
+			</div>
+		</div>
+
+		<!--End login form-->
+		<!--Add text form-->
+
+		<div class = "bigBlock" id = "addText">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Добавление текста</h1>
+				<!-- <form method = "post"> -->
+					<textarea id = "addTextBox" class = "textbox" required></textarea>
+					<button type="submit" class = "formButton" name = "addText" id = "addAndUpdateText">Добавить</button> 
+				<!-- </form> -->
+			</div>
+		</div>
+
+		<!--End add text form-->
+
+		<div class = "bigBlock" id = "leaderboard">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Таблица лидеров</h1>
+
+				<div class = "leaderBlock">
+					<div class = "leaderInfoFlex">
+						<dis class = "leaderInfo">№</dis>
+						<div class = "leaderInfo">Логин</div>
+						<div class = "leaderInfo">Результат</div>
+					</div>
+					<div class = "leaderInfoFlex leader-users">
+						<div class = "leaderInfo">1</div>
+						<div class = "leaderInfo">Вася Пупкин</div>
+						<div class = "leaderInfo">5км/ч</div>
+					</div>
+				</div>
+
+				<div class = "whereAmI">
+					<div class = "leaderInfoFlex leaderMe">
+						<div class = "leaderInfo">0</div>
+						<div class = "leaderInfo">Жуков ебать</div>
+						<div class = "leaderInfo">больше всех</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
     </body>
 </html>
