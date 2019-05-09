@@ -6,6 +6,24 @@ body{
     font-family: 'Source Sans Pro', sans-serif;
 }
 
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+    border-width:1px 1px 1px 2px;
+    border-color: #777;
+    background-color: #aaa;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background-color: #999;
+}
+
+::-webkit-scrollbar-button{
+    display: none;
+}
+
 .head{
     position: absolute;
     width: 100%;
@@ -28,6 +46,8 @@ body{
     width: 15%;
     height: 94vh;
     background: #f0f0f0;
+    overflow-y: scroll;
+    padding: 0;
 }
 
 .center-block{
@@ -237,21 +257,28 @@ body{
 }
 
 .other-text-button{
-    position: absolute;
+    position: fixed;
     width: 60px;
     height: 60px;
     border-radius: 100%;
     background: #ffffff;
     bottom: 3%;
-    left: 9%;
     border-style: solid;
     border-width: 2px;
     border-color: #e3e3e3;
     transition: 0.2s;
 }
 
-.other-text-button:last-child{
-    left: calc(100% - 9% - 75px);
+.oth1{
+    left: 9%;
+}
+
+.oth2{
+    right: calc(60px + 91%);
+}
+
+.oth3{
+    left: calc(60px + 91%);
 }
 
 .other-text{

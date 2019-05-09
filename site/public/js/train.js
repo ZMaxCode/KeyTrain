@@ -9,6 +9,7 @@ var interval, time = 0, mistake = 0;
 var left = 0, size, prevActiveKey, keyLayout = "";
 var user = false;
 var bestScore;
+var letters = " ";
 
 jq(document).ready(() => {
     jq(".list-text").eq(0).css("background", "#0289d16e");
@@ -29,6 +30,12 @@ jq(document).ready(() => {
     jq(".progress-line").css("display", "none");
     jq("#again").css("display", "none");
     checkUser();
+    for(var i = 0; i < jq(".key").length; i++){
+        for(var j = 0; j < jq(".key").eq(i).text().length; j++){
+            var d = jq(".key").eq(i).text()[j];
+            if(typeof(d) !== "undefined" && d !== "↑" && d !== "↵" && d != "←") letters += d
+        }
+    }
 });
 
 function regClick(){
@@ -40,10 +47,11 @@ function logClick(){
     localStorage.setItem('username', jq("#logLogin").val());
     jq("#logIn").css("display", "none");
     checkUser();
-    changeText(jq("#textBlock").eq(activeTextNumber), activeTextNumber);
+    changeText(jq(".textBlock").eq(activeTextNumber), activeTextNumber);
 }
 
 function massage(text, bool){
+    setTimeout(() => jq(".massage").css("display", "none"), 3000);
     jq(".massage").css("display", "block");
     if(bool) jq(".massage").css("background", "#8bc34ad7")
     else jq(".massage").css("background", "#f44336d7")
@@ -74,7 +82,7 @@ function isLogged(){
 
 function logOut(){
     setCookie("token", "");
-    changeText(jq("#textBlock").eq(activeTextNumber), activeTextNumber);
+    changeText(jq(".textBlock").eq(activeTextNumber), activeTextNumber);
     checkUser();
     massage("Вы успешно вышли", true)
 }
@@ -87,7 +95,7 @@ function setTexts( texts ){
         lengthText.text(texts[i][2].length + " символов")
         lengthText.attr("class", "length-text");
         textBlock.text(texts[i][2]);
-        textBlock.attr("id", "textBlock");
+        textBlock.attr("class", "textBlock");
         block.attr("class", "list-text").attr("textId", texts[i][0]);
         jq(".list-text-block").append(block);
         block.append(textBlock, lengthText);
@@ -95,13 +103,28 @@ function setTexts( texts ){
         text[i] = texts[i][2];
     }
     activeText = text[0];
-    changeText(jq("#textBlock").eq(0), 0);
+    jq(".list-text-block").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"))
+    changeText(jq(".textBlock").eq(0), 0);
     seeKey();
 }
 
 function addText(){
-    if(jq("#addTextBox").val() != "" && getCookie()["token"] != "") addTextToDB(jq("#addTextBox").val());
-    else massage("Войдите в систему, чтобы добавлять тексты", false)
+    var check = true;
+    var d = jq("#addTextBox").val();
+    var errorLetter;
+    for(var i = 0; i < d.length; i++){
+        if(letters.indexOf(d[i].toLowerCase()) == -1){
+            check = false;
+            if(d[i] !== "\n") errorLetter = d[i];
+            else errorLetter = "enter";
+            break;
+        }
+    }
+    if(d != "" && getCookie()["token"] != "" && check && d.length >= 30) addTextToDB(d);
+    else if(!check && d.length > 0) massage("Найден символ, которого нет в русской и английской расскладке клавиатуры: " + errorLetter, false)
+    else if(d === "") massage("Введите текст", false)
+    else if(d.length < 30) massage("Текст должен быть больше или равен 30 символам", false)
+    else massage("Войдите в систему, чтобы добавлть тексты", false)
 }
 
 function addText2( resolt ){
@@ -112,7 +135,7 @@ function addText2( resolt ){
         let textBlock = jq("<div/>");
         lengthText.text(jq("#addTextBox").val().length + " символов")
         lengthText.attr("class", "length-text");
-        textBlock.attr("id", "textBlock");
+        textBlock.attr("class", "textBlock");
         textBlock.text(jq("#addTextBox").val());
         block.attr("class", "list-text").attr("textId", resolt);
         jq(".list-text-block").append(block);
@@ -122,13 +145,15 @@ function addText2( resolt ){
         massage("Текст успешно добавлен", true)
         jq("#addTextBox").val("");
         jq("#addText").css("display", "none");
+        jq("#help-list-text").remove();
+        jq(".list-text-block").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"));
     }
 }
 
 function randomText(){
     var rand = Math.floor(Math.random() * (text.length  - 0) + 0);
-    while(rand == activeTextNumber) rand = Math.floor(Math.random() * (text.length  - 0) + 0);
-    changeText(jq(".list-text").eq(rand), rand);
+    if(text.length > 1) while(rand == activeTextNumber) rand = Math.floor(Math.random() * (text.length  - 0) + 0);
+    changeText(jq(".textBlock").eq(rand), rand);
 }
 
 function createText(){
