@@ -16,11 +16,11 @@ jq(document).ready(() => {
     jq("#enterTextBox").attr("spellcheck", "false").focus();
     jq("#again").click(() => againClick());
     jq(".user").click(() => userClick());
-    jq(".exit").click(() => jq(".bigBlock").css("display", "none"));
+    jq(".exit").click(() => exitClick());
     jq(".regLine").click(() => lineClick("#reg"))
     jq(".logInLine").click(() => lineClick("#logIn"))
     jq("#addTextButton").click(() => jq("#addText").css("display", "block"))
-    jq("#leaderButton").click(() => jq("#leaderboard").css("display", "block"))
+    jq("#leaderButton").click(() => leaderClick())
     jq(".closeMassage").click(() => jq(".massage").css("display", "none"));
     jq("#rendom-text").click(() => randomText())
     jq("#addAndUpdateText").click(() => addText());
@@ -37,6 +37,65 @@ jq(document).ready(() => {
         }
     }
 });
+
+function exitClick(){
+    jq(".bigBlock").css("display", "none");
+    jq(".leader-users, .leaderMe .leaderInfo").remove();
+    jq("#logPassword, #logLogin, #regRepeatPassword, #regPassword, #regLogin").val("");
+}
+
+function leaderClick(){
+    jq("#leaderboard").css("display", "block");
+    sendRequest("POST", URL, {
+        "event": "get scores",
+        "textId": jq(".list-text").eq(activeTextNumber).attr( "textId" )
+    }, (r) => createLeaderTable(r["message"]));
+}
+
+function createLeaderTable(leaders){
+    var us = false;
+    for(var i = 0; i < leaders.length; i++){
+        var block = jq("<div/>");
+        block.attr("class", "leaderInfoFlex leader-users");
+        var line = jq("<div/>");
+        line.attr("class", "leaderInfo");
+        line.text(i + 1);
+        jq(".leaderBlock").append(block);
+        block.append(line);
+        for(var j = 0; j < leaders[i].length; j++){
+            var line = jq("<div/>");
+            line.attr("class", "leaderInfo");
+            line.text(leaders[i][j]);
+            block.append(line);
+        }
+        if(leaders[i][0] == localStorage.getItem("username") && getCookie()["token"] != ""){
+            us = true;
+            var line = jq("<div/>");
+            line.attr("class", "leaderInfo");
+            line.text(i + 1);
+            jq(".leaderMe").append(line);
+            for(var j = 0; j < leaders[i].length; j++){
+                var line = jq("<div/>");
+                line.attr("class", "leaderInfo");
+                line.text(leaders[i][j]);
+                jq(".leaderMe").append(line);
+            }
+        }
+        
+    }
+    if(getCookie()["token"] == ""){
+        var line = jq("<div/>");
+        line.attr("class", "leaderInfo");
+        line.text("Войдите в систему, чтобы найти себя");
+        jq(".leaderMe").append(line);
+    }
+    if(!us && getCookie()["token"] != ""){
+        var line = jq("<div/>");
+        line.attr("class", "leaderInfo");
+        line.text("Напишите текст, чтобы оказаться в топе");
+        jq(".leaderMe").append(line);
+    }
+}
 
 function regClick(){
     jq("#logIn").css("display", "block");
@@ -83,6 +142,7 @@ function isLogged(){
 function logOut(){
     setCookie("token", "");
     changeText(jq(".textBlock").eq(activeTextNumber), activeTextNumber);
+    localStorage.setItem("username", "");
     checkUser();
     massage("Вы успешно вышли", true)
 }
