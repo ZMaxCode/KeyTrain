@@ -154,6 +154,15 @@ class Database:
     
     if len( data ) == 0: return False
     
+    txt = txt.replace( '\'', '\'\'' )
+    
+    print( '''
+      insert into texts(
+        userId, txt
+      )
+      values( {}, '{}' )
+    '''.format( data[0][0], txt ) )
+    
     self.cursor.execute( '''
       insert into texts(
         userId, txt
@@ -301,3 +310,15 @@ class Database:
     if len( score ) == 0: return 0
     
     else: return score[0][0]
+  
+  def getScores( self, textId ):
+    if not self.isConnected: return False
+    
+    self.cursor.execute( '''
+      select users.login, scores.score
+      from users, scores
+      where scores.userId = users.id and scores.textId = {}
+      order by scores.score desc
+    '''.format( textId ) )
+    
+    return self.cursor.fetchall()

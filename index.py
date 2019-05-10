@@ -101,6 +101,10 @@ class CRequestHandler( BaseHTTPRequestHandler ):
 
         if not result: response = getResponse( 'error', 'Error' )
         else: response = getResponse( 'success', 'Successfully' )
+      # Get all scores by textId
+      elif evnt == 'get scores':
+        result = database.getScores( data[ 'textId' ] )
+        response = getResponse( 'success', result )
     except:
       response = getResponse( 'error', 'undefined event' )
     
