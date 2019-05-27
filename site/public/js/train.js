@@ -24,11 +24,13 @@ jq(document).ready(() => {
     jq(".closeMassage").click(() => jq(".massage").css("display", "none"));
     jq("#rendom-text").click(() => randomText())
     jq("#addAndUpdateText").click(() => addText());
+    jq(".admin").click(() => moderText());
     jq(".letter").css("transition", "0.2s");
     jq(document).on("input", "#enterTextBox", () => startText());
     jq(document).keyup(function(e) { if (e.key === "Escape" && start) againClick()});
     jq(".progress-line").css("display", "none");
     jq("#again").css("display", "none");
+    changeTextCategory();
     checkUser();
     for(var i = 0; i < jq(".key").length; i++){
         for(var j = 0; j < jq(".key").eq(i).text().length; j++){
@@ -37,6 +39,30 @@ jq(document).ready(() => {
         }
     }
 });
+
+function moderText(){
+    jq("#moderBlock").css("display", "block");
+}
+
+function helpChangeTextCtegory(i, j){
+    jq(".flex-header div").eq(i).css("background", "#009688a7");
+    jq(".flex-header div").eq(j).css("background", "transparent");
+    jq(".list-text-block").eq(i).css("display", "block");
+    jq(".list-text-block").eq(j).css("display", "none");
+}
+
+function changeTextCategory(){
+    var prevTextsWindow = 0;
+    helpChangeTextCtegory(prevTextsWindow, 1);
+    for(let i = 0; i < 2; i++){
+        jq(".flex-header div").eq(i).click(() => {
+            if(prevTextsWindow != i){
+                helpChangeTextCtegory(i, prevTextsWindow);
+                prevTextsWindow = i;
+            }
+        })
+    }
+}
 
 function exitClick(){
     jq(".bigBlock").css("display", "none");
@@ -157,13 +183,13 @@ function setTexts( texts ){
         textBlock.text(texts[i][2]);
         textBlock.attr("class", "textBlock");
         block.attr("class", "list-text").attr("textId", texts[i][0]);
-        jq(".list-text-block").append(block);
+        jq("#globalTexts").append(block);
         block.append(textBlock, lengthText);
         block.click(() => changeText(textBlock, i));
         text[i] = texts[i][2];
     }
     activeText = text[0];
-    jq(".list-text-block").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"))
+    jq("#globalTexts").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"))
     changeText(jq(".textBlock").eq(0), 0);
     seeKey();
 }
@@ -198,7 +224,7 @@ function addText2( resolt ){
         textBlock.attr("class", "textBlock");
         textBlock.text(jq("#addTextBox").val());
         block.attr("class", "list-text").attr("textId", resolt);
-        jq(".list-text-block").append(block);
+        jq("#globalTexts").append(block);
         block.append(textBlock, lengthText);
         let i = text.length - 1;
         block.click(() => changeText(textBlock, i));
@@ -206,7 +232,7 @@ function addText2( resolt ){
         jq("#addTextBox").val("");
         jq("#addText").css("display", "none");
         jq("#help-list-text").remove();
-        jq(".list-text-block").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"));
+        jq("#globalTexts").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"));
     }
 }
 

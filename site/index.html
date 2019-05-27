@@ -20,6 +20,7 @@
 			<div class = "name">KeyTrain</div>
 			<div class = "user"><i class="fas fa-user"></i></div>
 			<div class = "user-info">
+				<i class="fas fa-clipboard-check admin"></i>
 				<span class = "userName">123</span>
 				<span class = "exit-user">Выйти</span>
 			</div>
@@ -28,7 +29,12 @@
 		<div class = "flex-block">
 			<div class = "left-block">
 				<div class = "block-header">Другие тексты</div>
-				<div class = "list-text-block"></div>
+				<div class = "flex-header">
+					<div>Глобальные</div>
+					<div>Локальные</div>
+				</div>
+				<div class = "list-text-block" id = "globalTexts"></div>
+				<div class = "list-text-block" id = "localTexts"></div>
 				<div class = "other-text-button oth1" id = "rendom-text"><div class = "help-center"><i class="fas fa-random other-text"></i></div></div>
 				<div class = "other-text-button oth2" id = "addTextButton"><div class = "help-center"><i class="fas fa-plus other-text"></i></div></div>
 			</div>
@@ -117,6 +123,7 @@
 				</div>
 				<div class = "total">Ожидание завершения написания текста</div>
 				<button id = "again">Начать заново</button>
+				<div class = "other-text-button oth4" id = "delText"><div class = "help-center"><i class="fas fa-trash-alt other-text del"></i></i></div></div>
 				<div class = "other-text-button oth3" id = "leaderButton"><div class = "help-center"><i class="fas fa-trophy other-text"></i></div></div>
 			</div>
 		</div>
@@ -175,6 +182,8 @@
 				<i class="fas fa-times exit"></i>
 				<h1 class = "text-center">Добавление текста</h1>
 					<textarea id = "addTextBox" class = "textbox" required></textarea>
+					<input type = "checkbox" id = "addLocalText">
+					<span>Сделать текст локальным?</span>
 					<button type="submit" class = "formButton" name = "addText" id = "addAndUpdateText">Добавить</button> 
 			</div>
 		</div>
@@ -192,21 +201,29 @@
 						<div class = "leaderInfo">Логин</div>
 						<div class = "leaderInfo">Результат</div>
 					</div>
-					<!-- <div class = "leaderInfoFlex leader-users">
-						<div class = "leaderInfo">1</div>
-						<div class = "leaderInfo">Вася Пупкин</div>
-						<div class = "leaderInfo">5км/ч</div>
-					</div> -->
 				</div>
 
 				<div class = "whereAmI">
 					<div class = "leaderInfoFlex leaderMe">
-						<!-- <div class = "leaderInfo">0</div>
-						<div class = "leaderInfo">Жуков ебать</div>
-						<div class = "leaderInfo">больше всех</div> -->
 					</div>
 				</div>
+				<div class = "loading">	</div>
+			</div>
+		</div>
 
+		<div class = "bigBlock" id = "moderBlock">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Модерация текстов</h1>
+				<div class = "moderTextBlock">
+					<div class = "moderTextAddDelete">
+						<div class = "moderText">Добавиш!!!?</div>
+						<div class = "moderButtons">
+							<button id = "addModerText">Добавить</button>
+							<button id = "deleteModerText">Удалить</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 

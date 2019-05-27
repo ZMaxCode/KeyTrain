@@ -281,6 +281,10 @@ body{
     left: calc(60px + 91%);
 }
 
+.oth4{
+    right: 9%;
+}
+
 .other-text{
     position: absolute;
     top: 50%;
@@ -303,6 +307,18 @@ body{
 .user:hover{
     transform: scale(1.2) translateY(-37.5%);
     cursor: pointer;
+}
+
+.admin:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.admin{ 
+    margin-right: 10px;
+    color: #0288d1;
+    font-size: 2em;
+    transition: 0.2s;
 }
 
 .user-block{
@@ -342,7 +358,9 @@ body{
     z-index: 4;
 }
 
-#reg, #logIn, #addText, #leaderboard{display: none}
+#reg, #logIn, #addText, #leaderboard, #moderBlock{display: none}
+
+#addText{text-align: center;}
 
 .otherForm{
     width: 50%;
@@ -464,6 +482,7 @@ body{
     transition: 0.2s;
     overflow: hidden;
     white-space: nowrap;
+    position: relative;
 }
 
 .length-text{
@@ -523,4 +542,71 @@ body{
     top: 10px;
     right: 10px;
     font-size: 2em;
+}
+
+.flex-header{
+    width: 100%;
+    display: flex;
+}
+
+.flex-header > div{
+    flex: 1;
+    height: 3vh;
+    text-align: center;
+    font-size: 1.3em;
+    transition: 0.3s;
+}
+
+.flex-header > div:hover{ cursor: pointer; }
+
+.flex-header > div:first-child{
+    border-style: solid;
+    border-width: 0 2px 0 0;
+    border-color: #e3e3e3;;
+}
+
+.moderTextBlock{
+    width: 90%;
+    height: 75vh;
+    background: #e3e3e3;
+    margin: auto;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.moderTextAddDelete{
+    width: 100%;
+    background: #ffffff;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 1.5em;
+}
+
+.moderButtons{
+    margin: 15px auto 0 auto;
+    text-align: center;
+}
+
+.moderButtons > button{
+    border-style: none;
+    border-radius: 50px;
+    font-size: 1.3em;
+    padding: 10px;
+    color: white;
+    width: 20%;
+}
+
+#addModerText{
+    background: #009688;
+    margin-right: 15px;
+}
+
+#deleteModerText{
+    background: #f44336;
+}
+
+.moderButtons > button:hover{ cursor: pointer; }
+
+.del{
+    color: #f44336;
 }

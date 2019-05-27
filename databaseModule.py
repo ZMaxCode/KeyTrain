@@ -156,13 +156,6 @@ class Database:
     
     txt = txt.replace( '\'', '\'\'' )
     
-    print( '''
-      insert into texts(
-        userId, txt
-      )
-      values( {}, '{}' )
-    '''.format( data[0][0], txt ) )
-    
     self.cursor.execute( '''
       insert into texts(
         userId, txt
