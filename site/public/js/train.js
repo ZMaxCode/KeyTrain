@@ -10,6 +10,8 @@ var left = 0, size, prevActiveKey, keyLayout = "";
 var user = false;
 var bestScore;
 var letters = " ";
+var mode = 0;
+var syllableLength = 0, prevSyllableLength;
 
 jq(document).ready(() => {
     jq(".list-text").eq(0).css("background", "#0289d16e");
@@ -24,6 +26,9 @@ jq(document).ready(() => {
     jq(".closeMassage").click(() => jq(".massage").css("display", "none"));
     jq("#rendom-text").click(() => randomText())
     jq("#addAndUpdateText").click(() => addText());
+    jq("#syllableGenerate").click(() => againClick());
+    jq(".checkMode div").eq(0).click(() => textsMode())
+    jq(".checkMode div").eq(1).click(() => syllablesMode())
     jq(".admin").click(() => moderText());
     jq(".letter").css("transition", "0.2s");
     jq(document).on("input", "#enterTextBox", () => startText());
@@ -38,10 +43,87 @@ jq(document).ready(() => {
             if(typeof(d) !== "undefined" && d !== "↑" && d !== "↵" && d != "←") letters += d
         }
     }
+    checkMode();
+    checkSyllableLength();
 });
+
+function checkSyllableLength(){
+    jq(".syllableRadio").eq(0).css({
+        "background": "#ff5722d7",
+        "opacity": "1",
+        "color": "white"
+    });
+    for(let i = 0; i < jq(".syllableRadio").length; i++){
+        jq(".syllableRadio").eq(i).click(() => {
+            if(syllableLength !== i){
+                prevSyllableLength = syllableLength;
+                jq(".syllableRadio").eq(i).css({
+                    "background": "#ff5722d7",
+                    "opacity": "1",
+                    "color": "white"
+                })
+                jq(".syllableRadio").eq(prevSyllableLength).css({
+                    "background": "transparent",
+                    "opacity": "0.7",
+                    "color": "black"
+                })
+                syllableLength = i;
+            }
+            changeText(NaN, NaN);
+        })
+    }
+}
 
 function moderText(){
     jq("#moderBlock").css("display", "block");
+}
+
+function modeStyle(eq, op, bc, c){
+    jq(".checkMode div").eq(eq).css({
+        "opacity": op,
+        "background": bc,
+        "color": c
+    })
+}
+
+function checkMode(){
+    if(mode == 0){
+        jq(".syllableResult").css("transform", "translateX(calc(100% + 10px))")
+        modeStyle(0, "1", "#3f51b5d7", "white");
+        modeStyle(1, "0.7", "transparent", "black");
+    }
+    else{
+        modeStyle(1, "1", "#3f51b5d7", "white");
+        modeStyle(0, "0.7", "transparent", "black");
+    }
+}
+
+function syllablesMode(){
+    mode = 1;
+    checkMode();
+    jq(".left-block, .right-block").css("width", "0px");
+    jq(".center-block").css("margin", "2vh auto")
+    jq(".other-text-button").css("opacity", "0")
+    jq(".syllableBlock").css({
+        "height": "5vh",
+        "padding": "5px"
+    })
+    setTimeout(() => jq(".other-text-button").css("display", "none"), 300)
+    changeText(NaN, NaN)
+}
+
+function textsMode(){
+    mode = 0;
+    checkMode()
+    jq(".left-block, .right-block").css("width", "15%");
+    jq(".center-block").css("margin", "0 auto")
+    jq(".other-text-button").css("display", "block")
+    jq(".syllableBlock").css({
+        "height": "0",
+        "padding": "0"
+    })
+    setTimeout(() => jq(".other-text-button").css("opacity", "1"), 1)
+    changeText(jq(".textBlock").eq(activeTextNumber), activeTextNumber)
 }
 
 function helpChangeTextCtegory(i, j){
@@ -253,24 +335,29 @@ function createText(){
 
 function changeText(block, i){
     let data;
-    
-    jq(".list-text").eq(activeTextNumber).css("background", "transparent");
-    jq(".list-text").eq(i).css("background", "#0289d16e");
-    activeTextNumber = i;
-    activeText = block.text();
+    if(mode == 0){
+        jq(".list-text").eq(activeTextNumber).css("background", "transparent");
+        jq(".list-text").eq(i).css("background", "#0289d16e");
+        activeTextNumber = i;
+        activeText = block.text();
+    }
+    else activeText = randomSlyllables( parseInt(jq(".syllableRadio").eq(syllableLength).text()), 40, 30 );
     jq(".text").empty();
     createText();
     againClick();
-
-    data = {
-        'event' : 'get score',
-        'token' : getCookie()[ 'token' ],
-        'textId' : jq(".list-text").eq(activeTextNumber).attr( "textId" )
-    };
-    sendRequest( "POST", URL, data, ( r ) => {
-        if( r[ "event" ] === "error" ) bestScore = 0;
-        else bestScore = r[ "message" ];
-    } );
+    
+    if(mode == 0){
+        data = {
+            'event' : 'get score',
+            'token' : getCookie()[ 'token' ],
+            'textId' : jq(".list-text").eq(activeTextNumber).attr( "textId" )
+        };
+        sendRequest( "POST", URL, data, ( r ) => {
+            if( r[ "event" ] === "error" ) bestScore = 0;
+            else bestScore = r[ "message" ];
+        } );
+    }
+    
 }
 
 function lineClick(id){
@@ -341,12 +428,20 @@ function startText(){
         
         if( keyNumber < 0 ) keyNumber = 0;
 
-        if(keyNumber > bestScore) bestScore = keyNumber;
-        jq('.total').html("Ваши баллы: " + keyNumber + " очков" + checkRecord(bestScore) + "<br><br>Скорость печати: " + keySpeed + " символов в минуту"+ "<br><br>Количество ошибок: " + mistake);
-        jq('#enterTextBox').attr('disabled','disabled');
-        jq(".progress-line-process").css("left", keyNumber >= 400 ? 100 + "%" : 100 / 400 * keyNumber + "%");
-        jq(".progress-line").css("display", "block");
-        setScore(keyNumber, keySpeed);
+        if(mode == 0){
+            if(keyNumber > bestScore) bestScore = keyNumber;
+            jq('.total').html("Ваши баллы: " + keyNumber + " очков" + checkRecord(bestScore) + "<br><br>Скорость печати: " + keySpeed + " символов в минуту"+ "<br><br>Количество ошибок: " + mistake);
+            jq('#enterTextBox').attr('disabled','disabled');
+            jq(".progress-line-process").css("left", keyNumber >= 400 ? 100 + "%" : 100 / 400 * keyNumber + "%");
+            jq(".progress-line").css("display", "block");
+            setScore(keyNumber, keySpeed);
+        }
+        else{
+            console.log(mode)
+            jq(".syllableResult span").text("Скорость печати: " + keySpeed + " символов в минуту");
+            jq(".syllableResult").css("transform", "translateX(0px)");
+            jq('#enterTextBox').attr('disabled','disabled');
+        }
     }
 }
 
@@ -389,6 +484,7 @@ function againClick(){
     jq(".help").css("opacity", "1");
     jq(".text").css("transform", "translateX(0px)");
     jq(".progress-line").css("display", "none");
+    jq(".syllableResult").css("transform", "translateX(calc(100% + 10px))")
 }
 
 function seeKey(){
