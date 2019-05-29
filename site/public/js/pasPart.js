@@ -2,8 +2,11 @@ function getRandomInt(min, max){
   return Math.floor( Math.random() * ( max - min ) ) + min;
 }
 
-function randomSlyllables( length, spaceProbability, punctuationProbability ){
+function randomSlyllables( length, spaceProbability, punctuationProbability, upperCaseProbablity ){
   let slyllables = [ 
+    'а', 'я', 'э', 'е', 'о', 'ё', 'ы', 'и', 'у', 'ю', 'б', 'в', 'г',
+    'ж', 'д', 'з', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х',
+    'ш', 'ц', 'щ',
     'на', 'ну', 'но', 'ны', 'ни', 'не', 'ня', 'нё', 'ню', 'нэ', 'нь',
     'ма', 'му', 'мо', 'мы', 'ми', 'ме', 'мя', 'мё', 'мю', 'мэ', 'мь',
     'та', 'ту', 'то', 'ты', 'ти', 'те', 'тя', 'тё', 'тю', 'тэ', 'ть',
@@ -24,14 +27,18 @@ function randomSlyllables( length, spaceProbability, punctuationProbability ){
     'ча', 'чу', 'чю', 'чо', 'чи', 'че', 'чё', 'чь',
     'ша', 'шу', 'шо', 'ши', 'ше', 'шё', 'шь',
     'ща', 'щу', 'що', 'щи', 'ще', 'щё', 'щь',
-    'йа', 'йо', 'йи', 'йе', 'йю'
+    'йа', 'йо', 'йи', 'йе', 'йю',
+    'мой', 'ив', 'нож', 'режь', 'ток', 'луг', 'вал', 'ум', 'сон', 'скрип', 
+    'лоб', 'укор', 'пёс', 'вяз', 'кот', 'ряд', 'штраф', 'сух', 'птиц', 'мышь',
+    'шабаш', 'ель', 'наземь', 'день', 'крепь', 'рябь', 'зверь', 'высь', 'вязь', 
+    'сеть', 'медь', 'явь', 'верфь', 'юдифь', 'дочь', 'плач', 'вещь', 'лещ'
   ];
 
   let punctuation =[
     '!', '.', ',', ';', ':', '?', '...', '-'
   ];
 
-  let symbol, fl = false;
+  let symbol, fl = false, fl2 = false;
   let str = '';
 
   while( str.length < length ){
@@ -51,23 +58,26 @@ function randomSlyllables( length, spaceProbability, punctuationProbability ){
         }
         
         str += ' ';
+        fl2 = true;
 
         if( getRandomInt( 0, 100 ) < punctuationProbability && !fl ){
           str += '('
           fl = true;
         }
     }
-    else str += slyllables[ getRandomInt(0, slyllables.length) ];
+    else{
+      let slyllable = slyllables[ getRandomInt(0, slyllables.length) ];  
+      if( getRandomInt( 0, 100 ) < upperCaseProbablity && fl2 || str.length == 0 ){
+        let tmp = slyllable;
+        slyllable = tmp[0].toUpperCase() + tmp.substr(1, tmp.length)
+      }
+      str += slyllable
+      fl2 = false
+    }
   }
 
+  if( str.charAt( str.length-1 ) == ' ' ) str = str.substring(0, str.length-1)
   if( fl ) str += ')'
 
   return str
 }
-
-// function windowLoad(){
-//   "use strict";
-  
-//   console.log( randomSlyllables( 300, 40, 30 ) );
-
-// }

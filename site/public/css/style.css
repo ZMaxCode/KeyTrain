@@ -9,6 +9,7 @@ body{
 
 ::-webkit-scrollbar{
     width:10px;
+    display: none;
 }
 
 ::-webkit-scrollbar-thumb{
@@ -473,6 +474,7 @@ body{
 .list-text-block{
     width: 100%;
     max-height: 92vh;
+    transition: 0.3s;
 }
 
 .list-text{
@@ -699,4 +701,12 @@ button:hover{ cursor: pointer; }
 
 .syllableResult > span{
     font-size: 1.5em;
+}
+
+.localTexts{
+    width: 100%;
+}
+
+.LGBlock{
+    display: flex;
 }
