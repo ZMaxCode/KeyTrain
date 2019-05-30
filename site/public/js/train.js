@@ -98,7 +98,7 @@ function setModerText(texts){
             data = {
                 'event' : 'accept or decline text',
                 'uuid' : getCookie()[ 'uuid' ],
-                'textId' : jq(".moderText").eq(i).attr("textId"),
+                'textId' : texts[2][i][0],
                 'action' : true
             };
             sendRequest( "POST", URL, data, ( r ) => {
@@ -107,12 +107,12 @@ function setModerText(texts){
                     jq(".moderTextAddDelete").eq(i).remove();
 
                     text.push(texts[2][i][2]);
-                    let block = jq("<div/>").attr("class", "list-text").attr("textId", jq(".moderText").eq(i).attr("textId"));
-                    let lengthText = jq("<div/>").text(jq("#addTextBox").val().length + " символов").attr("class", "length-text");
+                    let block = jq("<div/>").attr("class", "list-text").attr("textId", texts[2][i][0]);
+                    let lengthText = jq("<div/>").text(texts[2][i][2].length + " символов").attr("class", "length-text");
                     let textBlock = jq("<div/>").attr("class", "textBlock").text(texts[2][i][2]);;
                     jq("#globalTexts").append(block);
                     block.append(textBlock, lengthText);
-                    block.click(() => changeText(textBlock, text.length - 1));
+                    block.click(() => changeText(textBlock, jq(".globalTexts .list-text").length - 1));
                     jq("#globalTexts #help-list-text").remove();
                     jq("#globalTexts").append(jq("<div/>").attr("id", "help-list-text").css("height", jq(".list-text").eq(0).height() + 40 + "px"));
                 }
@@ -288,13 +288,10 @@ function exitClick(){
 }
 
 function leaderClick(){
-    let m;
-    if(isLocal) m = "#globalTexts"
-    else m = "#localTexts"
     jq("#leaderboard").css("display", "block");
     sendRequest("POST", URL, {
         "event": "get scores by text id",
-        "textId": jq(m + " .list-text").eq(activeTextNumber).attr( "textId" )
+        "textId": jq("#globalTexts .list-text").eq(activeTextNumber).attr( "textId" )
     }, ( r ) => {
       if( r[ "event" ] === "success" ) createLeaderTable( r [ "message" ] );
       else createLeaderTable( [] );
