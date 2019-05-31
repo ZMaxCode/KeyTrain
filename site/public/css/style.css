@@ -314,16 +314,20 @@ body{
     cursor: pointer;
 }
 
-.admin:hover{
+.admin:hover, .usersAdmin:hover{
     transform: scale(1.2);
     cursor: pointer;
 }
 
-.admin{ 
+.admin, .usersAdmin{ 
     margin-right: 10px;
     color: #0288d1;
     font-size: 2em;
     transition: 0.2s;
+}
+
+.usersAdmin{
+    color: #009688;
 }
 
 .user-block{
@@ -363,7 +367,7 @@ body{
     z-index: 4;
 }
 
-#reg, #logIn, #addText, #leaderboard, #moderBlock{display: none}
+#reg, #logIn, #addText, #leaderboard, #moderBlock, #changeLoginBlock, #changePasswordBlock, #usersBlock{display: none}
 
 #addText{text-align: center;}
 
@@ -523,6 +527,10 @@ body{
 .userName{
     font-size: 1.5em;
     margin-right: 10px;
+}
+
+.userName:hover{
+    cursor: pointer;
 }
 
 .exit-user, .closeMassage:hover{
@@ -717,4 +725,18 @@ button:hover{ cursor: pointer; }
 
 .LGBlock{
     display: flex;
+}
+
+#change{
+    right: 5%;
+}
+
+.userNameInfoBlock{
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+}
+
+.userNameInfoBlock > span{
+    font-size: 1.5em;
 }

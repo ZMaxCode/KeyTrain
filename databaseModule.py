@@ -104,7 +104,7 @@ class Database:
     
     return data[0]
   
-  def changeLogin( self, uuid, login_ ):
+  def changeLogin( self, uuid, oldPassword, login_ ):
     if not self.isConnected: return 0
     
     userInfo = self.getUserInfoByUUID( uuid )
@@ -112,12 +112,21 @@ class Database:
     if not userInfo: return 1
     
     self.cursor.execute( '''
+      select password
+      from users
+      where id = {}
+    '''.format( userInfo[0] ) )
+    password = self.cursor.fetchall()[0][0].split( ';' )
+    
+    if sha1( bytes( '{}{}'.format( oldPassword, password[1] ), 'utf8' ) ).hexdigest() != password[0]: return 2
+    
+    self.cursor.execute( '''
       select id
       from users
       where login = '{}'
     '''.format( login_ ) )
     
-    if len( self.cursor.fetchall() ) != 0: return 2
+    if len( self.cursor.fetchall() ) != 0: return 3
     
     self.cursor.execute( '''
       update users
@@ -254,6 +263,25 @@ class Database:
     self.connect.commit()
     
     return [ uuid, isAdmin ]
+  
+  def getUser( self, uuid, login ):
+    if not self.isConnected: return 0
+    
+    userInfo = self.getUserInfoByUUID( uuid )
+    
+    if not userInfo: return 1
+    if userInfo[1] == 0: return 2
+    
+    self.cursor.execute( '''
+      select id, login, isAdmin
+      from users
+      where login = '{}'
+    '''.format( login ) )
+    data = self.cursor.fetchall()
+    
+    if len( data ) == 0: return 3
+    
+    return data[0]
   
   # ==================== Methods for work with texts ==================== #
   def addText( self, uuid, txt, isLocal = False ):

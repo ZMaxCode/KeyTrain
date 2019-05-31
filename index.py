@@ -85,11 +85,12 @@ class CRequestHandler( BaseHTTPRequestHandler ):
         else: response = getResponse( 'success', result[ 1: ] )
       # Change login
       elif evnt == 'change login':
-        result = database.changeLogin( data[ 'uuid' ], data[ 'login' ] )
+        result = database.changeLogin( data[ 'uuid' ], data[ 'password' ], data[ 'login' ] )
         
         if result == 0: response = getResponse( 'error', 'Database not connected' )
         elif result == 1: response = getResponse( 'error', 'Invalid UUID' )
-        elif result == 2: response = getResponse( 'error', 'User with login "{}" already exists'.format( data[ 'login' ] ) )
+        elif result == 2: response = getResponse( 'error', 'Invalid password' )
+        elif result == 3: response = getResponse( 'error', 'User with login "{}" already exists'.format( data[ 'login' ] ) )
         else: response = getResponse( 'success', result )
       # Change password
       elif evnt == 'change password':
@@ -122,8 +123,17 @@ class CRequestHandler( BaseHTTPRequestHandler ):
         result = database.login( data[ 'login' ], data[ 'password' ] )
         
         if result == 0: response = getResponse( 'error', 'Database not connected' )
-        elif result == 1: response = getResponse( 'error', 'User with login "{}" doen\'t exists'.format( data[ 'login' ] ) )
+        elif result == 1: response = getResponse( 'error', 'User with login "{}" doesn\'t exists'.format( data[ 'login' ] ) )
         elif result == 2: response = getResponse( 'error', 'Invalid password' )
+        else: response = getResponse( 'success', result )
+      # Get user
+      elif evnt == 'get user':
+        result = database.getUser( data[ 'uuid' ], data[ 'login' ] )
+        
+        if result == 0: response = getResponse( 'error', 'Database not connected' )
+        elif result == 1: response = getResponse( 'error', 'Invalid UUID' )
+        elif result == 2: response = getResponse( 'error', 'You isn\'t admin' )
+        elif result == 3: response = getResponse( 'error', 'User with login "{}" doesn\'t exists'.format( data[ 'login' ] ) )
         else: response = getResponse( 'success', result )
       # ==================== Methods for work with texts ==================== #
       # Add text

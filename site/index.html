@@ -25,6 +25,7 @@
 			</div>
 			<div class = "user"><i class="fas fa-user"></i></div>
 			<div class = "user-info">
+				<i class="fas fa-users usersAdmin"></i>
 				<i class="fas fa-clipboard-check admin"></i>
 				<span class = "userName">123</span>
 				<span class = "exit-user">Выйти</span>
@@ -143,9 +144,14 @@
 			</div>
 		</div>
 
-		<div class = "user-block">
+		<div class = "user-block" id = "logReg">
 			<div class = "user-block-line regLine">Регистрация</div>
 			<div class = "user-block-line logInLine">Вход</div>
+		</div>
+
+		<div class = "user-block" id = "change">
+			<div class = "user-block-line changeLogin">Сменить логин</div>
+			<div class = "user-block-line changePassword">Сменить пароль</div>
 		</div>
 
 		<!--Register form-->
@@ -205,6 +211,8 @@
 
 		<!--End add text form-->
 
+
+		<!--Leaderboard block-->
 		<div class = "bigBlock" id = "leaderboard">
 			<div class = "otherForm">
 				<i class="fas fa-times exit"></i>
@@ -226,6 +234,10 @@
 			</div>
 		</div>
 
+		<!--End leaderboard block-->
+
+		<!--Moderation block-->
+
 		<div class = "bigBlock" id = "moderBlock">
 			<div class = "otherForm">
 				<i class="fas fa-times exit"></i>
@@ -235,6 +247,73 @@
 				</div>
 			</div>
 		</div>
+
+		<!--End moderation block-->
+
+		<!--Change login block-->
+
+		<div class = "bigBlock" id = "changeLoginBlock">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Изменение логина</h1>
+				<div class = "lab">
+					<label for="loginChange" class = "labText">Новый логин</label><br>
+					<input type="text" id="changeLogin" class = "labEnter" required>
+				</div>
+				<div class = "lab">
+					<label for="repPassword" class = "labText">Старый пароль</label><br>
+					<input type="password" id="changeloginPassword" class = "labEnter" required>
+				</div>
+				<button type="submit" class = "formButton" id = "changeloginButton">Изменить</button> 
+			</div>
+		</div>
+
+		<!--End change login block-->
+
+		<!--Change password block-->
+
+		<div class = "bigBlock" id = "changePasswordBlock">
+			<div class = "otherForm">
+				<i class="fas fa-times exit"></i>
+				<h1 class = "text-center">Изменение пароля</h1>
+				<div class = "lab">
+					<label for="oldPassword" class = "labText">Старый пароль</label><br>
+					<input type="password" id="changeOldPassword" class = "labEnter" required>
+				</div>
+				<div class = "lab">
+					<label for="newPassword" class = "labText">Новый пароль</label><br>
+					<input type="password" id="changeNewPassword" class = "labEnter" required>
+				</div>
+				<div class = "lab">
+					<label for="rNewPassword" class = "labText">Повторите новый пароль</label><br>
+					<input type="password" id="repNewPassword" class = "labEnter" required>
+				</div>
+				<button type="submit" class = "formButton" id = "changePasswordButton">Изменить</button> 
+			</div>
+		</div>
+
+		<!--End change password block-->
+
+		<!--Users block-->
+
+		<div class = "bigBlock" id = "usersBlock">
+			<div class = "otherForm">
+					<i class="fas fa-times exit"></i>
+					<h1 class = "text-center">Проверка пользователей</h1>
+					<div class = "lab">
+						<label for="userCheck" class = "labText">Логин ползователя</label><br>
+						<input type="text" id="userNameCheck" class = "labEnter" required>
+					</div>
+					<button type="submit" class = "formButton" id = "userNameCheckButton">Найти пользователя</button> 
+					<div class = "userNameInfoBlock">
+						<span id = "userNameInfo">fasol228</span><br>
+						<span id = "userNameStatus">Администратор</span>
+						<button class = "formButton" id = "userNameAdmin">Сделать администратором</button>
+					</div>
+			</div>
+		</div>
+
+		<!--End users block-->
 
 		<div class = "massage">
 				<i class="fas fa-times closeMassage"></i>

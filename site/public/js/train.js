@@ -22,10 +22,10 @@ jq(document).ready(() => {
     jq("#globalTexts .list-text").eq(0).css("background", "#0289d16e");
     jq("#enterTextBox").attr("spellcheck", "false").focus();
     jq("#again").click(() => againClick());
-    jq(".user").click(() => userClick());
+    jq(".user").click(() => userClick("#logReg"));
     jq(".exit").click(() => exitClick());
-    jq(".regLine").click(() => lineClick("#reg"))
-    jq(".logInLine").click(() => lineClick("#logIn"))
+    jq(".regLine").click(() => lineClick("#reg", "#logReg"))
+    jq(".logInLine").click(() => lineClick("#logIn", "#logReg"))
     jq("#addTextButton").click(() => jq("#addText").css("display", "block"))
     jq("#leaderButton").click(() => leaderClick())
     jq(".closeMassage").click(() => jq(".massage").css("display", "none"));
@@ -35,8 +35,15 @@ jq(document).ready(() => {
     jq(".checkMode div").eq(0).click(() => textsMode())
     jq(".checkMode div").eq(1).click(() => syllablesMode())
     jq(".exit-user").click(() => logOut());
-    jq(".admin").click(() => moderText());
-    jq("#delText").click(() => delText())
+    jq(".admin").click(() => jq("#moderBlock").css("display", "block"));
+    jq("#delText").click(() => delText());
+    jq(".userName").click(() => userClick("#change"))
+    jq(".changeLogin").click(() => lineClick("#changeLoginBlock", "#change"));
+    jq(".changePassword").click(() => lineClick("#changePasswordBlock", "#change"));
+    jq("#changeloginButton").click(() => changeLogin());
+    jq("#changePasswordButton").click(() => changePassword());
+    jq(".usersAdmin").click(() => jq("#usersBlock").css("display", "block"));
+    jq("#userNameCheckButton").click(() => userNameCheck());
     jq(".letter").css("transition", "0.2s");
     jq(document).on("input", "#enterTextBox", () => startText());
     jq(document).keyup(function(e) { if (e.key === "Escape" && start) againClick()});
@@ -52,6 +59,122 @@ jq(document).ready(() => {
     checkMode();
     checkSyllableLength();
 });
+
+function userNameCheck(){
+    if(jq("#userNameCheck").val() != ""){
+        let data;
+
+        data = {
+            'event' : 'get user',
+            'uuid' : getCookie()[ 'uuid' ],
+            'login' : jq("#userNameCheck").val()
+        }
+
+        sendRequest( "POST", URL, data, ( r ) => {
+            if(r[ "event" ] === "success"){
+                userBool = r[ "message" ][2] == 1;
+                userId = r["message"][0];
+
+                jq("#userNameInfo").text(r[ "message" ][1])
+                if(userBool){
+                    jq("#userNameStatus").text("Администратор");
+                    jq("#userNameAdmin").text("Удалить из администраторов");
+                    jq(".userNameInfoBlock").css("display", "block");
+                    jq("#userNameAdmin").on("click",() => {
+                        changeUserStatus(userId, false, "Добавить в администраторы", r[ "message" ][1]);
+                        jq("#userNameStatus").text("Пользователь");
+                        userBool = false;
+                    })
+                }
+                else{
+                    jq("#userNameStatus").text("Пользователь");
+                    jq("#userNameAdmin").text("Добавить в администраторы");
+                    jq(".userNameInfoBlock").css("display", "block");
+                    jq("#userNameAdmin").on("click", () => {
+                        changeUserStatus(userId, true, "Удалить из администраторов", r[ "message" ][1]);
+                        jq("#userNameStatus").text("Администратор");
+                        userBool = true;
+                    })
+                }
+            }
+            else message("Произошла ошибка", false);
+        } )
+    }
+    else massage("Введите имя пользователя", false)
+}
+
+function changeUserStatus(userId, isAdmin, buttonText, userName){
+    let data;
+
+    data = {
+        'event' : 'change user status',
+        'uuid' : getCookie()[ 'uuid' ],
+        'userId' : userId,
+        'isAdmin' : isAdmin
+    }
+
+
+    sendRequest( "POST", URL, data, ( r ) =>{
+        if(r[ "event" ] === "success"){
+            massage("Статус пользователя " + userName + " успешно изменен", true);
+            jq("#userNameAdmin").text(buttonText);
+            if(userName == userInfo[1]) getTexts();
+            jq(".userNameInfoBlock").css("display", "none");
+            jq("#userNameAdmin").off("click");
+        }
+        else{
+            massage("произошла ошибка", false);
+        }
+    })
+}
+
+function changePassword(){
+    if(jq("#changeOldPassword").val() != "" && jq("#changeNewPassword").val() != "" && jq("#repNewPassword").val() != ""){
+        if(jq("#changeNewPassword").val() == jq("#repNewPassword").val()){
+            let data;
+
+            data = {
+                'event' : 'change password',
+                'uuid' : getCookie()[ 'uuid' ],
+                'oldPassword' : jq("#changeOldPassword").val(),
+                'newPassword' : jq("#changeNewPassword").val()
+            }
+
+            sendRequest( "POST", URL, data, ( r ) => {
+                if(r[ "event" ] === 'success'){
+                    massage("Пароль успешно изменен", true);
+                    exitClick()
+                }
+                else massage("Произошла ошибка", false);
+            })
+        }
+        else massage("Новые пароли не совпадают", false)
+    }
+    else massage("Заполните все поля", false)
+}
+
+function changeLogin(){
+    if(jq("#changeLogin").val() != "" && jq("#changeloginPassword").val() != ""){
+        let data;
+
+        data = {
+            'event' : 'change login',
+            'uuid' : getCookie()[ 'uuid' ],
+            'login' : jq("#changeLogin").val(),
+            'password' : jq("#changeloginPassword").val()
+        }
+
+        sendRequest( "POST", URL, data, ( r ) => {
+            if(r[ 'event' ] === 'success' ){
+                massage("Логин успешно изменен", true);
+                jq(".userName").text(jq("#changeLogin").val())
+                exitClick();
+            }
+            else massage("Произошла ошибка", false);
+        })
+    }
+    else massage("Введите новый логин и старый пароль", false);
+}
 
 function delText(){
     if(isLocal || userInfo[0] == 1){
@@ -163,10 +286,6 @@ function checkSyllableLength(){
             changeText(NaN, NaN);
         })
     }
-}
-
-function moderText(){
-    jq("#moderBlock").css("display", "block");
 }
 
 function modeStyle(eq, op, bc, c){
@@ -284,7 +403,7 @@ function changeTextCategory(){
 function exitClick(){
     jq(".bigBlock").css("display", "none");
     jq(".leader-users, .leaderMe .leaderInfo").remove();
-    jq("#logPassword, #logLogin, #regRepeatPassword, #regPassword, #regLogin").val("");
+    jq("#logPassword, #logLogin, #regRepeatPassword, #regPassword, #regLogin, #changeOldPassword, #changeNewPassword, #repNewPassword, #changeLogin, #changeLoginPassword").val("");
 }
 
 function leaderClick(){
@@ -382,10 +501,10 @@ function isLogged(texts){
         jq(".user").css("display", "none");
         jq(".user-info").css("display", "block");
         if(userInfo[0] == 1){
-            jq(".oth4, .admin").show();
+            jq(".oth4, .admin, .usersAdmin").show();
             setModerText(texts);
         } 
-        else jq(".oth4, .admin").hide(); 
+        else jq(".oth4, .admin, .usersAdmin").hide(); 
         jq(".userName").text(userInfo[1]);
         setTexts(texts);
         startServer = true;
@@ -592,18 +711,20 @@ function changeText(block, i){
     
 }
 
-function lineClick(id){
+function lineClick(id, block){
     jq(id).css("display", "block");
-    userClick();
+    userClick(block);
 }
 
-function userClick(){
+
+
+function userClick(block){
     if(!user){
-        jq(".user-block").css("display", "block");
+        jq(block).css("display", "block");
         user = true;
     }
     else{
-        jq(".user-block").css("display", "none");
+        jq(block).css("display", "none");
         user = false;
     }
 }
