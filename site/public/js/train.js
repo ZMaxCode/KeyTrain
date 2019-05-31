@@ -97,7 +97,10 @@ function userNameCheck(){
                     })
                 }
             }
-            else message("Произошла ошибка", false);
+            else{
+                massage("Произошла ошибка", false);
+                jq(".userNameInfoBlock").css("display", "none");
+            } 
         } )
     }
     else massage("Введите имя пользователя", false)
@@ -487,6 +490,7 @@ function isLogged(texts){
     let data;
     
     uuid = getCookie()[ "uuid" ];
+    if(uuid === "undefined") uuid = "";
 
     data = {
         'event' : 'check user',
@@ -495,33 +499,37 @@ function isLogged(texts){
 
     changeTextCategory();
     jq("#localTexts, #globalTexts").empty();
-    sendRequest( "POST", URL, data, ( r ) => {
-    if( r[ "event" ] === "success" ){
-        userInfo = r[ "message" ];
-        jq(".user").css("display", "none");
-        jq(".user-info").css("display", "block");
-        if(userInfo[0] == 1){
-            jq(".oth4, .admin, .usersAdmin").show();
-            setModerText(texts);
-        } 
-        else jq(".oth4, .admin, .usersAdmin").hide(); 
-        jq(".userName").text(userInfo[1]);
-        setTexts(texts);
-        startServer = true;
-        jq(".flex-header div").eq(1).show();
+    if(uuid !== ""){
+        sendRequest( "POST", URL, data, ( r ) => {
+            if( r[ "event" ] === "success" ){
+                userInfo = r[ "message" ];
+                jq(".user").css("display", "none");
+                jq(".user-info").css("display", "block");
+                if(userInfo[0] == 1){
+                    jq(".oth4, .admin, .usersAdmin").show();
+                    setModerText(texts);
+                } 
+                else jq(".oth4, .admin, .usersAdmin").hide(); 
+                jq(".userName").text(userInfo[1]);
+                setTexts(texts);
+                startServer = true;
+                jq(".flex-header div").eq(1).show();
+            }
+            else notLoginUser(texts)
+        });
     }
-    else{
-        jq(".oth4, .admin").hide();
-        jq(".user").css("display", "block");
-        jq(".user-info").css("display", "none");
-        jq(".userName").text("");
-        userInfo = [];
-        setTexts(texts);
-        startServer = true;
-        jq(".flex-header div").eq(1).hide();
-    } 
-    });
-    
+    else notLoginUser(texts)
+}
+
+function notLoginUser(){
+    jq(".oth4, .admin").hide();
+    jq(".user").css("display", "block");
+    jq(".user-info").css("display", "none");
+    jq(".userName").text("");
+    userInfo = [];
+    setTexts(texts);
+    startServer = true;
+    jq(".flex-header div").eq(1).hide();
 }
 
 function logOut(){
