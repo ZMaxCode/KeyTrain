@@ -580,12 +580,20 @@ body{
     box-sizing: border-box;
 }
 
+.moderText{
+    word-wrap: break-word;
+}
+
 .moderTextAddDelete{
     width: 100%;
     background: #ffffff;
     padding: 15px;
     box-sizing: border-box;
     font-size: 1.5em;
+}
+
+.moderTextAddDelete:not(:first-child){
+    margin-top: 10px;
 }
 
 .moderButtons{
