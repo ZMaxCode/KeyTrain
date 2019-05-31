@@ -436,7 +436,7 @@ function createLeaderTable(leaders){
             line.text(leaders[i][j]);
             block.append(line);
         }
-        if(leaders[i][0] == localStorage.getItem("username") && getCookie()["uuid"] != ""){
+        if(leaders[i][0] == userInfo[1] && getCookie()["uuid"] != ""){
             us = true;
             var line = jq("<div/>");
             line.attr("class", "leaderInfo");
@@ -490,7 +490,10 @@ function isLogged(texts){
     let data;
     
     uuid = getCookie()[ "uuid" ];
-    if(uuid === "undefined") uuid = "";
+    if(uuid === "undefined" && uuid === undefined){
+        uuid = "";
+        setCookie("uuid", "");
+    } 
 
     data = {
         'event' : 'check user',
@@ -521,7 +524,7 @@ function isLogged(texts){
     else notLoginUser(texts)
 }
 
-function notLoginUser(){
+function notLoginUser(texts){
     jq(".oth4, .admin").hide();
     jq(".user").css("display", "block");
     jq(".user-info").css("display", "none");
