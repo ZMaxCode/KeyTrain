@@ -170,7 +170,8 @@ function changeLogin(){
         sendRequest( "POST", URL, data, ( r ) => {
             if(r[ 'event' ] === 'success' ){
                 massage("Логин успешно изменен", true);
-                jq(".userName").text(jq("#changeLogin").val())
+                jq(".userName").text(jq("#changeLogin").val());
+                userInfo[1] = jq("#changeLogin").val();
                 exitClick();
             }
             else massage("Произошла ошибка", false);
@@ -490,7 +491,7 @@ function isLogged(texts){
     let data;
     
     uuid = getCookie()[ "uuid" ];
-    if(uuid === "undefined" && uuid === undefined){
+    if(uuid === undefined){
         uuid = "";
         setCookie("uuid", "");
     } 
